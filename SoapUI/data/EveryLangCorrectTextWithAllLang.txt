@@ -1,0 +1,14 @@
+ru;This text doesn't contain errors
+ru;Этот текст не содержит ошибок
+en;This text doesn't contain errors
+en;Этот текст не содержит ошибок
+en;Це текст не містить помилок
+uk;This text doesn't contain errors
+uk;Це текст не містить помилок
+ru,en;This text doesn't contain errors
+ru,en;Этот текст не содержит ошибок
+ru,uk;This text doesn't contain errors
+ru,uk;Этот текст не содержит ошибок
+ru,uk;Це текст не містить помилок
+en,uk;This text doesn't contain errors
+en,uk;Це текст не містить помилок
