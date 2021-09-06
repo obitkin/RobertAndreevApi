@@ -525,7 +525,53 @@ testRunner.testCase.setPropertyValue("counter", "0")
 testRunner.testCase.setPropertyValue("isEnd", "false")</con:setupScript><con:tearDownScript>testRunner.testCase.setPropertyValue("text", "")
 testRunner.testCase.setPropertyValue("lang", "")
 testRunner.testCase.setPropertyValue("counter", "0")
-testRunner.testCase.setPropertyValue("isEnd", "false")</con:tearDownScript><con:properties><con:property><con:name>dataFile</con:name><con:value>/data/CheckingRepeatWordErrorWithFindRepeat.txt</con:value></con:property><con:property><con:name>text</con:name><con:value/></con:property><con:property><con:name>lang</con:name><con:value/></con:property><con:property><con:name>isEnd</con:name><con:value>false</con:value></con:property><con:property><con:name>options</con:name><con:value>8</con:value></con:property><con:property><con:name>counter</con:name><con:value>0</con:value></con:property></con:properties></con:testCase><con:properties/><con:tearDownScript/></con:testSuite><con:testSuite id="acd83cf3-6330-4b6f-b8be-9e09412606b8" name="OneEmptyTextSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="8f2f39bd-1a46-40a8-a23e-9aed395d79af" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="PositiveAllLangAndOptions" searchProperties="true"><con:settings/><con:testStep type="groovy" name="RunEmptyRequestForEachData" id="43c7984e-d758-4100-b418-54287dee2aa8"><con:settings/><con:config><script>def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+testRunner.testCase.setPropertyValue("isEnd", "false")</con:tearDownScript><con:properties><con:property><con:name>dataFile</con:name><con:value>/data/CheckingRepeatWordErrorWithFindRepeat.txt</con:value></con:property><con:property><con:name>text</con:name><con:value/></con:property><con:property><con:name>lang</con:name><con:value/></con:property><con:property><con:name>isEnd</con:name><con:value>false</con:value></con:property><con:property><con:name>options</con:name><con:value>8</con:value></con:property><con:property><con:name>counter</con:name><con:value>0</con:value></con:property></con:properties></con:testCase><con:testCase id="eff2a986-74f4-4f29-8fe2-5d569b3f275e" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="CheckingCapitalizationError" searchProperties="true"><con:settings/><con:testStep type="groovy" name="setupData" id="e47bc496-bfb6-4e65-9c05-4ff43ab9a558"><con:settings/><con:config><script>import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+def projectPath = groovyUtils.projectPath
+def filePath = projectPath + testRunner.testCase.getPropertyValue("dataFile")
+
+def lines = Files.readAllLines(Paths.get(filePath), StandardCharsets.UTF_8);
+def counter = testRunner.testCase.getPropertyValue("counter").toInteger()
+
+if(lines.size() == 0) {
+	testRunner.cancel("No test data in file")
+} else if(counter + 1 >= lines.size()) {
+	testRunner.testCase.setPropertyValue("isEnd", "true")
+}
+
+def data = lines[counter].split(";")
+
+log.info("Lang: " + data[0] + "   " + "Text: " + data[1])
+testRunner.testCase.setPropertyValue("lang", data[0])
+testRunner.testCase.setPropertyValue("text", data[1])</script></con:config></con:testStep><con:testStep type="request" name="checkIncorrectTextWIthCapitalizationError" id="b427025e-374c-47c7-99ee-0f222f60dadb"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SpellServiceSoap</con:interface><con:operation>checkText</con:operation><con:request name="checkIncorrectTextWIthCapitalizationError" id="f82aafd8-910b-4c9c-8ad7-09d450720d92"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://speller.yandex.net/services/spellservice</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:spel="http://speller.yandex.net/services/spellservice">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <spel:CheckTextRequest lang="${#TestCase#lang}">\r
+         <spel:text>${#TestCase#text}</spel:text>\r
+      </spel:CheckTextRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="7d1c882e-ff21-4d4c-870b-c694daef468d"/><con:assertion type="Schema Compliance" id="5452254b-89ac-4b00-9868-f7fc9c75e902"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="c60b3a21-cd40-412f-8b8f-1e7d6f1262eb"/><con:assertion type="Valid HTTP Status Codes" id="3c76a1d0-7d74-43c4-9387-b07e7985e518" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:assertion type="XPath Match" id="ef336d54-314d-4786-9f0f-d7ad768b802c" name="XPath Match Text Send"><con:configuration><path>//*:CheckTextResponse/*:SpellResult/*:error/*:word</path><content>${#TestCase#text}</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="checkIncorrectTextWithCapitalizationErrorIgnoreCapitalization" id="e1f4a88b-585d-48c2-8898-2557134412a7"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>SpellServiceSoap</con:interface><con:operation>checkText</con:operation><con:request name="checkIncorrectTextWithCapitalizationErrorIgnoreCapitalization" id="f53130cf-6ccc-4be9-82f8-034f929189bb"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://speller.yandex.net/services/spellservice</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:spel="http://speller.yandex.net/services/spellservice">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <spel:CheckTextRequest lang="${#TestCase#lang}" options="${#TestCase#options}">
+         <spel:text>${#TestCase#text}</spel:text>
+      </spel:CheckTextRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="381b588f-0a06-4c60-bec2-d14c05f8ceff"/><con:assertion type="Schema Compliance" id="95eab630-043f-405f-9f3f-7e0d8b92d2f2"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="c1794129-1f80-4c62-838d-9fa709d50398"/><con:assertion type="Valid HTTP Status Codes" id="5a42c8d9-cbfa-4276-9159-6c016d1a2c47" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:assertion type="Simple NotContains" id="a3e49d7d-166d-4875-a340-52991ff8fc89" name="Not Contains Errors"><con:configuration><token>error</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Copy of incrementCounterAndReturnTrueIfDataEnough" id="b88af476-5a00-444c-951d-0cee0bfe5534"><con:settings/><con:config><script>if(!testRunner.testCase.getPropertyValue("isEnd").toBoolean()) { // not end
+	def counter = testRunner.testCase.getPropertyValue("counter").toInteger()
+	counter = counter + 1
+	testRunner.testCase.setPropertyValue("counter", counter.toString())
+	testRunner.gotoStepByName("setupData")
+}</script></con:config></con:testStep><con:setupScript>testRunner.testCase.setPropertyValue("text", "")
+testRunner.testCase.setPropertyValue("lang", "")
+testRunner.testCase.setPropertyValue("counter", "0")
+testRunner.testCase.setPropertyValue("isEnd", "false")</con:setupScript><con:tearDownScript>testRunner.testCase.setPropertyValue("text", "")
+testRunner.testCase.setPropertyValue("lang", "")
+testRunner.testCase.setPropertyValue("counter", "0")
+testRunner.testCase.setPropertyValue("isEnd", "false")</con:tearDownScript><con:properties><con:property><con:name>dataFile</con:name><con:value>/data/CheckingCapitalizationError.txt</con:value></con:property><con:property><con:name>lang</con:name><con:value/></con:property><con:property><con:name>text</con:name><con:value/></con:property><con:property><con:name>counter</con:name><con:value>0</con:value></con:property><con:property><con:name>isEnd</con:name><con:value>false</con:value></con:property><con:property><con:name>options</con:name><con:value>512</con:value></con:property></con:properties></con:testCase><con:properties/><con:tearDownScript/></con:testSuite><con:testSuite id="acd83cf3-6330-4b6f-b8be-9e09412606b8" name="OneEmptyTextSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="8f2f39bd-1a46-40a8-a23e-9aed395d79af" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="PositiveAllLangAndOptions" searchProperties="true"><con:settings/><con:testStep type="groovy" name="RunEmptyRequestForEachData" id="43c7984e-d758-4100-b418-54287dee2aa8"><con:settings/><con:config><script>def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
 def projectPath = groovyUtils.projectPath
 def filePath = projectPath + "/data/PositiveAllLangAndOptions.txt"
 
