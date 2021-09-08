@@ -1,0 +1,857 @@
+{
+	"info": {
+		"_postman_id": "fcecf2ed-bf1c-4ef9-9cc9-8516f74884b4",
+		"name": "Trello",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create board",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\r",
+							"    \"boardName\", \r",
+							"    pm.variables.replaceIn('{{$randomCompanyName}}')\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",() => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board id exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"id\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board name exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"name\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board name is equal to name in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"boardName\");\r",
+							"    var actual = pm.response.json().name\r",
+							"    pm.expect(actual).to.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"boardId\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/boards/?name={{boardName}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						""
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{boardName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List id exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"id\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List name exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"name\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List name is equal to name in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"listName\");\r",
+							"    var actual = pm.response.json().name\r",
+							"    pm.expect(actual).to.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board id is equal to board id in request\", () => {\r",
+							"    var responseBoardId = pm.response.json().idBoard\r",
+							"    pm.expect(responseBoardId).is.eql(\r",
+							"        pm.collectionVariables.get(\"boardId\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"listId\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\r",
+							"    \"listName\", \r",
+							"    pm.variables.replaceIn('{{$randomBsBuzz}}')\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/boards/:boardId/lists?name={{listName}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						":boardId",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{listName}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "boardId",
+							"value": "{{boardId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card id exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"id\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card name exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"name\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card name is equal to name in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"cardName\");\r",
+							"    var actual = pm.response.json().name\r",
+							"    pm.expect(actual).to.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card description is equal to description in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"cardDesc\");\r",
+							"    var actual = pm.response.json().desc\r",
+							"    pm.expect(actual).is.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board id is equal to card's board id\", () => {\r",
+							"    var responseBoardId = pm.response.json().idBoard\r",
+							"    pm.expect(responseBoardId).is.eql(\r",
+							"        pm.collectionVariables.get(\"boardId\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List id is equal to id in request\", () => {\r",
+							"    var responseListId = pm.response.json().idList\r",
+							"    pm.expect(responseListId).is.eql(\r",
+							"        pm.collectionVariables.get(\"listId\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"cardId\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\r",
+							"    \"cardName\", \r",
+							"    pm.variables.replaceIn('{{$randomBsBuzz}}')\r",
+							");\r",
+							"\r",
+							"pm.collectionVariables.set(\r",
+							"    \"cardDesc\", \r",
+							"    pm.variables.replaceIn('{{$randomCatchPhrase}}')\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/cards?idList={{listId}}&name={{cardName}}&desc={{cardDesc}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "idList",
+							"value": "{{listId}}"
+						},
+						{
+							"key": "name",
+							"value": "{{cardName}}"
+						},
+						{
+							"key": "desc",
+							"value": "{{cardDesc}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cards in a list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"There are only one card in list\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(Object.keys(responseJson).length).is.eql(1)\r",
+							"});\r",
+							"\r",
+							"const card = pm.response.json()[0]\r",
+							"\r",
+							"pm.test(\"Card name is equal to name in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"cardName\");\r",
+							"    var actual = card.name\r",
+							"    pm.expect(actual).to.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card description is equal to description in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"cardDesc\");\r",
+							"    var actual = card.desc\r",
+							"    pm.expect(actual).is.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board id is equal to card's board id\", () => {\r",
+							"    var responseBoardId = card.idBoard\r",
+							"    pm.expect(responseBoardId).is.eql(\r",
+							"        pm.collectionVariables.get(\"boardId\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List id is equal to id in request\", () => {\r",
+							"    var responseListId = card.idList\r",
+							"    pm.expect(responseListId).is.eql(\r",
+							"        pm.collectionVariables.get(\"listId\")\r",
+							"    )\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/lists/:listId/cards",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"lists",
+						":listId",
+						"cards"
+					],
+					"variable": [
+						{
+							"key": "listId",
+							"value": "{{listId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of a card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List id exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"id\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List name exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"name\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List id is equal to id in request\", () => {\r",
+							"    var responseListId = pm.response.json().id\r",
+							"    pm.expect(responseListId).is.eql(\r",
+							"        pm.collectionVariables.get(\"listId\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List name is equal to expected name\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"listName\");\r",
+							"    var actual = pm.response.json().name\r",
+							"    pm.expect(actual).to.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board id is equal to expected id\", () => {\r",
+							"    var responseBoardId = pm.response.json().idBoard\r",
+							"    pm.expect(responseBoardId).is.eql(\r",
+							"        pm.collectionVariables.get(\"boardId\")\r",
+							"    )\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/cards/:cardId/list",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"cards",
+						":cardId",
+						"list"
+					],
+					"variable": [
+						{
+							"key": "cardId",
+							"value": "{{cardId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a card",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\r",
+							"    \"cardName\", \r",
+							"    pm.variables.replaceIn('{{$randomBsBuzz}}')\r",
+							");\r",
+							"\r",
+							"pm.collectionVariables.set(\r",
+							"    \"cardDesc\", \r",
+							"    pm.variables.replaceIn('{{$randomCatchPhrase}}')\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card id exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"id\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card name exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"name\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card name is equal to name in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"cardName\");\r",
+							"    var actual = pm.response.json().name\r",
+							"    pm.expect(actual).to.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Card description is equal to description in request\", () => {\r",
+							"    var expected = pm.collectionVariables.get(\"cardDesc\");\r",
+							"    var actual = pm.response.json().desc\r",
+							"    pm.expect(actual).is.eql(expected)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Board id is equal to card's board id\", () => {\r",
+							"    var responseBoardId = pm.response.json().idBoard\r",
+							"    pm.expect(responseBoardId).is.eql(\r",
+							"        pm.collectionVariables.get(\"boardId\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List id is equal to id in request\", () => {\r",
+							"    var responseListId = pm.response.json().idList\r",
+							"    pm.expect(responseListId).is.eql(\r",
+							"        pm.collectionVariables.get(\"listId\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"cardId\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/cards/:cardId?name={{cardName}}&desc={{cardDesc}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"cards",
+						":cardId"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{cardName}}"
+						},
+						{
+							"key": "desc",
+							"value": "{{cardDesc}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "cardId",
+							"value": "{{cardId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create attachment on card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Attachment id exist in json\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"id\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"File name is equal to expected\", () => {\r",
+							"    var responseFileName = pm.response.json().fileName\r",
+							"    pm.expect(responseFileName).is.eql(\r",
+							"        pm.collectionVariables.get(\"fileName\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Attachment name name is equal to expected\", () => {\r",
+							"    var responseFileName = pm.response.json().name\r",
+							"    pm.expect(responseFileName).is.eql(\r",
+							"        pm.collectionVariables.get(\"attachmentName\")\r",
+							"    )\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.unset(\"attachmentURL\");\r",
+							"pm.collectionVariables.unset(\"attachmentName\");\r",
+							"pm.collectionVariables.unset(\"fileName\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\r",
+							"    \"attachmentURL\", \r",
+							"    pm.variables.replaceIn('{{$randomAnimalsImage}}')\r",
+							");\r",
+							"\r",
+							"pm.collectionVariables.set(\r",
+							"    \"attachmentName\", \r",
+							"    pm.variables.replaceIn('{{$randomFirstName}}')\r",
+							");\r",
+							"\r",
+							"pm.collectionVariables.set(\r",
+							"    \"fileName\", \r",
+							"    \"animals.jpeg\"\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/cards/:cardId/attachments?name={{attachmentName}}&url={{attachmentURL}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"cards",
+						":cardId",
+						"attachments"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{attachmentName}}"
+						},
+						{
+							"key": "url",
+							"value": "{{attachmentURL}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "cardId",
+							"value": "{{cardId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/cards/:cardId",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"cards",
+						":cardId"
+					],
+					"variable": [
+						{
+							"key": "cardId",
+							"value": "{{cardId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is text/plain\", function () {\r",
+							"    pm.expect(pm.response.headers.get('content-type')).to.include('text/plain');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body contains resource was not found string\", () => {\r",
+							"    pm.expect(pm.response.text()).to.eql(\"The requested resource was not found.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/cards/:cardId",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"cards",
+						":cardId"
+					],
+					"variable": [
+						{
+							"key": "cardId",
+							"value": "{{cardId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete board",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is json\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response have null value\", () => {\r",
+							"    pm.response.to.have.jsonBody(\"_value\")\r",
+							"    pm.expect(pm.response.json()['_value']).eql(null)\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.unset(\"boardId\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/1/boards/:boarId",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						":boarId"
+					],
+					"variable": [
+						{
+							"key": "boarId",
+							"value": "{{boardId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth1",
+		"oauth1": [
+			{
+				"key": "consumerSecret",
+				"value": "7b33c7a88aa7e730aefda2082666f68c9b4000a1acb33cfb71702a57a404e989",
+				"type": "string"
+			},
+			{
+				"key": "token",
+				"value": "f4b6650210a61a0450d5bc93441a6b8e02b1fcf43e8efbea65793ade96a1d1dd",
+				"type": "string"
+			},
+			{
+				"key": "consumerKey",
+				"value": "a01ce34dc7aa5ef50225dd80c03d162a",
+				"type": "string"
+			},
+			{
+				"key": "tokenSecret",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "signatureMethod",
+				"value": "HMAC-SHA1",
+				"type": "string"
+			},
+			{
+				"key": "version",
+				"value": "1.0",
+				"type": "string"
+			},
+			{
+				"key": "addParamsToHeader",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "addEmptyParamsToSign",
+				"value": false,
+				"type": "boolean"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://api.trello.com"
+		},
+		{
+			"key": "boardName",
+			"value": ""
+		},
+		{
+			"key": "listId",
+			"value": ""
+		},
+		{
+			"key": "listName",
+			"value": ""
+		},
+		{
+			"key": "cardId",
+			"value": ""
+		},
+		{
+			"key": "cardName",
+			"value": ""
+		},
+		{
+			"key": "cardDesc",
+			"value": ""
+		}
+	]
+}
