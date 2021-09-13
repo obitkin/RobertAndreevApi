@@ -1,4 +1,3 @@
-
 package com.epam.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,19 +9,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Board {
+public class TrelloList {
 
     @JsonProperty("id")
     private String id;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("desc")
-    private String desc;
     @JsonProperty("closed")
     private Boolean closed;
+    @JsonProperty("idBoard")
+    private String boardId;
 }
