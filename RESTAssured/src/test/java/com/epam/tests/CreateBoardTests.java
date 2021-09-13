@@ -38,6 +38,8 @@ public class CreateBoardTests extends BaseTest {
         assertThat(listOnBoardResponse.getTrelloLists(), matcher);
     }
 
+    Board newBoard;
+
     @Test(
             dataProvider = "createBoardData",
             dataProviderClass = BoardsTestProvider.class
@@ -58,7 +60,7 @@ public class CreateBoardTests extends BaseTest {
                 .then()
                 .spec(specification);
 
-        Board newBoard = creationResponse.getBoard();
+        newBoard = creationResponse.getBoard();
 
         assertThat(createdBoard.getId(), is(not(equalTo(newBoard.getName()))));
     }
@@ -66,6 +68,10 @@ public class CreateBoardTests extends BaseTest {
     @AfterMethod
     public void deleteBoard() {
         boardsService.deleteBoard(createdBoard);
+        if (newBoard != null) {
+            boardsService.deleteBoard(newBoard);
+            newBoard = null;
+        }
     }
 
 }
