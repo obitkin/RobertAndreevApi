@@ -1,4 +1,4 @@
-package com.epam.requests.builders;
+package com.epam.services.requests.builders;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public abstract class RequestBuilder {
 
-    public static final URI BASE_UDI = URI.create("https://api.trello.com");
+    public static final URI BASE_URI = URI.create("https://api.trello.com");
     protected String BASE_PATH;
 
     protected final Map<String, String> queryParameters = new HashMap<>();
@@ -24,7 +24,7 @@ public abstract class RequestBuilder {
                 .setAccept(ContentType.JSON)
                 .setContentType(ContentType.JSON)
                 .addQueryParam("UUID", UUID.randomUUID().toString())
-                .setBaseUri(BASE_UDI)
+                .setBaseUri(BASE_URI)
                 .build();
     }
 

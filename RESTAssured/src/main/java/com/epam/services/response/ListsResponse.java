@@ -1,6 +1,7 @@
-package com.epam.response;
+package com.epam.services.response;
 
 import com.epam.bean.Board;
+import com.epam.bean.TrelloList;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -9,15 +10,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.http.HttpStatus;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.lessThan;
 
 @AllArgsConstructor
-public class BoardsResponseHandler {
+public class ListsResponse {
 
-    @Getter private final Response response;
+    @Getter
+    private final Response response;
 
-    public Board getBoard() {
-        return response.then().extract().as(Board.class);
+    public List<TrelloList> getTrelloLists() {
+        return response.then().extract().body().jsonPath().getList(".", TrelloList.class);
+    }
+
+    public TrelloList getTrelloList() {
+        return response.then().extract().as(TrelloList.class);
     }
 
     public static ResponseSpecification goodResponseSpecification() {
@@ -27,4 +35,5 @@ public class BoardsResponseHandler {
                 .expectStatusCode(HttpStatus.SC_OK)
                 .build();
     }
+
 }
