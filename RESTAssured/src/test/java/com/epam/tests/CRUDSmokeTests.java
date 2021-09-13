@@ -2,9 +2,6 @@ package com.epam.tests;
 
 import com.epam.bean.Board;
 import com.epam.providers.BoardsTestProvider;
-import com.epam.services.response.BoardsResponse;
-import io.restassured.specification.ResponseSpecification;
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import static com.epam.matchers.BoardMatcher.equalIgnoreId;

@@ -2,10 +2,8 @@ package com.epam.tests;
 
 import com.epam.bean.Board;
 import com.epam.providers.BoardsTestProvider;
-import com.epam.services.response.BoardsResponse;
 import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.epam.matchers.BoardMatcher.equalIgnoreId;

@@ -1,6 +1,5 @@
 package com.epam.services.response;
 
-import com.epam.bean.Board;
 import com.epam.bean.TrelloList;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;

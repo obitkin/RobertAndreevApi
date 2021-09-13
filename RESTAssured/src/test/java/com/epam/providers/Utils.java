@@ -41,7 +41,7 @@ public class Utils {
     }
 
     public static Board getNotExistBoard() {
-        return Board.builder().name(name()).desc(desc()).closed(false).id("1").build();
+        return Board.builder().name(name()).desc(desc()).closed(false).id(invalidId).build();
     }
 
     public static TrelloList getTrelloList() {
